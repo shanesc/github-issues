@@ -25,7 +25,9 @@ body {
   line-height: 1;
 }
 
-a {
+a,
+a:visited {
+  color: #0366d6;
   text-decoration: none;
 }
 
