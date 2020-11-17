@@ -7,7 +7,7 @@ function Issues({ issues }) {
       {
         issues.map(issue => {
           return (
-            <IssueItem issue={issue} />
+            <IssueItem key={issue.id} issue={issue} />
           );
         })
       }
