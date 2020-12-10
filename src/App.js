@@ -11,28 +11,25 @@ class App extends Component {
     links: {},
   };
 
-  componentDidMount() {
-    fetch(
-      'https://api.github.com/repos/facebook/react/issues?per_page=10'
-    )
-      .then((res) => {
-        const parsedLinks = parse(res.headers.get('Link'));
-        console.log(parsedLinks);
-        this.setState({ links: parsedLinks });
-        return res.json();
-      })
-      .then((data) => this.setState({ issues: data }));
-  }
-
-  onClick = (url) => {
+  getIssues(url) {
     fetch(url)
       .then((res) => {
         const parsedLinks = parse(res.headers.get('Link'));
-        console.log(parsedLinks);
         this.setState({ links: parsedLinks });
         return res.json();
       })
-      .then((data) => this.setState({ issues: data }));
+      .then((data) => this.setState({ issues: data }))
+      .catch((err) => console.error('Error fetching issues: ' + err));
+  }
+
+  componentDidMount() {
+    this.getIssues(
+      'https://api.github.com/repos/facebook/react/issues?per_page=10'
+    );
+  }
+
+  handleNavClick = (url) => {
+    this.getIssues(url);
   };
 
   render() {
@@ -41,7 +38,10 @@ class App extends Component {
         <div className="container">
           <Header />
           <Issues issues={this.state.issues} />
-          <PageNav links={this.state.links} onClick={this.onClick} />
+          <PageNav
+            links={this.state.links}
+            handleNavClick={this.handleNavClick}
+          />
         </div>
       </div>
     );
